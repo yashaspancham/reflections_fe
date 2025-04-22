@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "project_y",
-    "slug": "project_y",
+    "slug": "projecty",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yashassringeri.projecty"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +37,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "0ca051aa-8e5e-43d2-a597-ad2655d12fb7"
+      }
+    },
+    "owner": "yashassringeri"
   }
 }
