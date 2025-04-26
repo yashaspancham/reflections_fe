@@ -80,7 +80,7 @@ const AddEntryPage = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 20 }}>
+    <ScrollView contentContainerStyle={{ padding: 20, backgroundColor:theme.colors.primaryContainer,flex:1 }}>
       <Toast />
       <View
         style={{
@@ -104,6 +104,8 @@ const AddEntryPage = () => {
             elevation: 2,
             padding: 10,
             marginTop: 20,
+            maxHeight:50,
+            justifyContent:"center",
           }}
         >
           <Text variant="bodySmall" style={{ color: theme.colors.secondary }}>
