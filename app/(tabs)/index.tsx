@@ -7,7 +7,7 @@ export default function HomeScreen() {
   const theme = useTheme();
   const router=useRouter();
   return (
-    <View style={{ flex: 1, padding: 12, paddingTop: 80,backgroundColor:theme.colors.primaryContainer }}>
+    <View style={{ flex: 1, padding: 12, paddingTop: 80,backgroundColor:	"#f6f6f6" }}>
       <Text
         variant="headlineLarge"
         style={{

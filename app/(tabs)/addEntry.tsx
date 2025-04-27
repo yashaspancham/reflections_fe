@@ -80,7 +80,7 @@ const AddEntryPage = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 20, backgroundColor:theme.colors.primaryContainer,flex:1 }}>
+    <ScrollView contentContainerStyle={{ padding: 20, backgroundColor:"#f6f6f6",flex:1 }}>
       <Toast />
       <View
         style={{
