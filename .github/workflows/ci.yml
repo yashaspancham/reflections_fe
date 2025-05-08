@@ -23,3 +23,8 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npx expo export --platform web
+    - name: upload build outpu
+      uses: actions/upload-artifavt@v4
+      with:
+        name: web-build
+        path: dist
