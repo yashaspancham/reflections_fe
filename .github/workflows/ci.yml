@@ -1,13 +1,11 @@
-
 name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -15,16 +13,35 @@ jobs:
         node-version: [22.x]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npx expo export --platform web
-    - name: upload build outpu
-      uses: actions/upload-artifact@v4
-      with:
-        name: web-build
-        path: dist
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci
+      - run: npx expo export --platform web
+      - name: Generate build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: dist
+
+      - name: Upload build to EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "dist/*"
+          target: "/home/${{ secrets.EC2_USER }}/web-app"
+      - name: Move to Ngnix root
+        uses: appleboy/ssh-action@v0.1.10
+        with: 
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo rm -rf /usr/share/nginx/html/*
+            sudo cp -r ~/web-app/* /usr/share/nginx/html/
+            sudo systemctl restart nginx  
