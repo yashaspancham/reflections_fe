@@ -38,9 +38,15 @@ const EntriesComponent = () => {
         />
       )}
       {entries?.map((item, index) => (
-        <Pressable key={index} onPress={() => router.push(
-          { pathname: "/addEntry", params: { datetime: item.datetime.toString() } }
-        )}>
+        <Pressable
+          key={index}
+          onPress={() =>
+            router.push({
+              pathname: "/addEntry",
+              params: { datetime: item.datetime.toString() },
+            })
+          }
+        >
           <View
             style={{
               borderTopWidth: index !== 0 ? 1 : 0,
@@ -104,10 +110,17 @@ const EntriesComponent = () => {
           </View>
         </Pressable>
       ))}
-      {entries?.length === 0 && (
-        <Text variant="headlineLarge" style={{ paddingTop: 50 }}>
-          There are no entries
-        </Text>
+      {entries === null && (
+        <View
+          style={{
+            flex: 1,
+            alignItems:"center",
+          }}
+        >
+          <Text variant="headlineLarge" style={{ paddingTop: 100 }}>
+            There are no entries
+          </Text>
+        </View>
       )}
     </ScrollView>
   );
