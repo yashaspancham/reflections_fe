@@ -43,5 +43,5 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             sudo rm -rf /usr/share/nginx/html/*
-            sudo cp -r ~/web-app/* /usr/share/nginx/html/
+            sudo cp -r ~/web-app/dist/* /usr/share/nginx/html/
             sudo systemctl restart nginx  
