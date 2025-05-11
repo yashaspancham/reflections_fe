@@ -110,7 +110,7 @@ const EntriesComponent = () => {
           </View>
         </Pressable>
       ))}
-      {entries === null && (
+      {dataPresent === 2 && (
         <View
           style={{
             flex: 1,
