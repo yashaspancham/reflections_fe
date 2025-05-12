@@ -118,7 +118,7 @@ const EntriesComponent = () => {
           }}
         >
           <Text variant="headlineLarge" style={{ paddingTop: 100 }}>
-            There are no entries
+            No entries
           </Text>
         </View>
       )}
