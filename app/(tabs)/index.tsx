@@ -2,12 +2,25 @@ import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { useTheme, Text, FAB } from "react-native-paper";
 import EntriesComponent from "@/components/Entries";
+import { useEffect } from "react";
 
 export default function HomeScreen() {
   const theme = useTheme();
-  const router=useRouter();
+  const router = useRouter();
+  useEffect(() => {//this has to be removed
+    setTimeout(()=>{
+      router.push("/login");
+    },100)
+  }, []);
   return (
-    <View style={{ flex: 1, padding: 12, paddingTop: 80,backgroundColor:	"#f6f6f6" }}>
+    <View
+      style={{
+        flex: 1,
+        padding: 12,
+        paddingTop: 80,
+        backgroundColor: "#f6f6f6",
+      }}
+    >
       <Text
         variant="headlineLarge"
         style={{
