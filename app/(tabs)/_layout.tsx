@@ -48,6 +48,12 @@ export default function TabLayout() {
           tabBarStyle: { display: "none" },
         }}
       />
+      <Tabs.Screen
+        name="signup"
+        options={{
+          tabBarStyle: { display: "none" },
+        }}
+      />
     </Tabs>
   );
 }
