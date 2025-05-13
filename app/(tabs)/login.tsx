@@ -1,6 +1,6 @@
-import { useRouter } from "expo-router";
 import { useState } from "react";
-import { View } from "react-native";
+import { View, useWindowDimensions } from "react-native";
+import { useRouter } from "expo-router";
 import { useTheme, Button, Text, TextInput } from "react-native-paper";
 import validator from 'validator';
 
@@ -11,6 +11,8 @@ const LoginPage = () => {
   const [credentialsNotOk, setCredentialsNotOk] = useState<boolean>(false);
   const router = useRouter();
   const theme = useTheme();
+  const {width}=useWindowDimensions();
+  const isMobileScreen=width < 640; 
   const submitActions=()=>{
     if(validator.isEmail(email) && password===" "){
       router.push("/");
@@ -23,7 +25,7 @@ const LoginPage = () => {
   return (
     <View
       style={{
-        backgroundColor: "#f6f6f6",
+        backgroundColor:isMobileScreen ? "#f6f0f6":"#f6f6f6",
         flex: 1,
         minHeight: 700,
         padding: 50,
@@ -34,7 +36,7 @@ const LoginPage = () => {
       <View
         style={{
           backgroundColor: "#f6f0f6",
-          maxHeight: 350,
+          maxHeight: 400,
           minWidth: 400,
           padding: 20,
           borderRadius: 30,
@@ -44,7 +46,7 @@ const LoginPage = () => {
           gap: 25,
         }}
       >
-        <Text variant="titleLarge" style={{ paddingBottom: 40 }}>
+        <Text variant="titleLarge" style={{ paddingBottom: 15 }}>
           Login
         </Text>
         <TextInput
