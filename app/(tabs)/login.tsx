@@ -1,10 +1,25 @@
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { useTheme, Button, Text, TextInput } from "react-native-paper";
+import validator from 'validator';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState<String>("");
+  const [email, setEmail] = useState<string>("");
   const [hidePassword, sethidePassword] = useState<boolean>(true);
+  const [password, setPassword] = useState<string>("");
+  const [credentialsNotOk, setCredentialsNotOk] = useState<boolean>(false);
+  const router = useRouter();
+  const theme = useTheme();
+  const submitActions=()=>{
+    if(validator.isEmail(email) && password===" "){
+      router.push("/");
+      setCredentialsNotOk(false);
+    }
+    else{
+      setCredentialsNotOk(true);
+    }
+  }
   return (
     <View
       style={{
@@ -37,30 +52,54 @@ const LoginPage = () => {
             maxHeight: 55,
             minWidth: 300,
           }}
+          value={email}
           mode="outlined"
           placeholder="Enter Your Email"
           onChange={(text) => {
             setEmail(text.nativeEvent.text);
           }}
         />
-        <TextInput
-          style={{
-            maxHeight: 55,
-            minWidth: 300,
-          }}
-          mode="outlined"
-          placeholder="Enter Your password"
-          secureTextEntry={hidePassword}
-        //   eye-off-outline
-          right={<TextInput.Icon icon={hidePassword?"eye-outline":"eye-off-outline"} onPress={()=>sethidePassword(state=>!state)}/>}
-          onChange={(text) => {
-            setEmail(text.nativeEvent.text);
-          }}
-        />
+
+        <View>
+          <TextInput
+            style={{
+              maxHeight: 55,
+              minWidth: 300,
+            }}
+            mode="outlined"
+            value={password}
+            placeholder="Enter Your password"
+            secureTextEntry={hidePassword}
+            right={
+              <TextInput.Icon
+                icon={hidePassword ? "eye-outline" : "eye-off-outline"}
+                onPress={() => sethidePassword((state) => !state)}
+              />
+            }
+            onChange={(text) => {
+              setPassword(text.nativeEvent.text);
+            }}
+          />
+          {credentialsNotOk && (
+            <Text variant="labelSmall" style={{ color: theme.colors.error }}>
+              Invalid Password or email
+            </Text>
+          )}
+          <Text variant="labelMedium" style={{ paddingTop: 10 }}>
+            No account, sign-up{" "}
+            <Text
+              onPress={() => router.push("/signup")}
+              style={{ textDecorationLine: "underline", color: "blue" }}
+            >
+              Here
+            </Text>
+          </Text>
+        </View>
+
         <Button
           mode="contained"
           style={{ minWidth: 300 }}
-          onPress={() => console.log("Hello")}
+          onPress={() => submitActions()}
         >
           Submit
         </Button>
