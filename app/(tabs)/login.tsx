@@ -16,14 +16,13 @@ const LoginPage = () => {
   const { width } = useWindowDimensions();
   const isMobileScreen = width < 640;
   const submitActions = () => {
-    if(email==="" || password===""){
+    if (email === "" || password === "") {
       Toast.show({
         type: "error",
         text1: "Enter both email and password",
       });
       return;
     }
-
 
     if (!validator.isEmail(email)) {
       Toast.show({
@@ -41,12 +40,13 @@ const LoginPage = () => {
         });
         router.push("/");
       } else {
-        setCredentialsNotOk(true);
         if (res.showPopUpMsg) {
           Toast.show({
             type: "error",
             text1: res.message,
           });
+        } else {
+          setCredentialsNotOk(true);
         }
       }
     });
