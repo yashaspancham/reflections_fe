@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { useTheme, Button, Text, TextInput } from "react-native-paper";
 import validator from "validator";
 import { loginAPI } from "@/apis/auth/login";
+import Toast from "react-native-toast-message";
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
@@ -15,16 +16,38 @@ const LoginPage = () => {
   const { width } = useWindowDimensions();
   const isMobileScreen = width < 640;
   const submitActions = () => {
+    if (email === "" || password === "") {
+      Toast.show({
+        type: "error",
+        text1: "Enter both email and password",
+      });
+      return;
+    }
+
     if (!validator.isEmail(email)) {
-      setCredentialsNotOk(true);
+      Toast.show({
+        type: "error",
+        text1: "Enter valid email",
+      });
       return;
     }
     loginAPI(email, password).then((res) => {
-      if (res) {
+      if (res.success) {
         setCredentialsNotOk(false);
+        Toast.show({
+          type: "success",
+          text1: res.message,
+        });
         router.push("/");
       } else {
-        setCredentialsNotOk(true);
+        if (res.showPopUpMsg) {
+          Toast.show({
+            type: "error",
+            text1: res.message,
+          });
+        } else {
+          setCredentialsNotOk(true);
+        }
       }
     });
   };
@@ -39,6 +62,7 @@ const LoginPage = () => {
         justifyContent: "center",
       }}
     >
+      <Toast />
       <View
         style={{
           backgroundColor: "#f6f0f6",
