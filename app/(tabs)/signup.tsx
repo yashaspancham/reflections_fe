@@ -1,9 +1,11 @@
 import { View } from "react-native";
 import { useState } from "react";
+import { useRouter } from "expo-router";
 import { Text, TextInput, Button } from "react-native-paper";
 import CardContainer from "@/components/auth/CardContainer";
 import validator from "validator";
 import Toast from "react-native-toast-message";
+import { signUpAPI } from "@/apis/auth/signUp";
 
 const Signup = () => {
   const [email, setEmail] = useState<string>("");
@@ -11,6 +13,7 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [hidePassword, sethidePassword] = useState<boolean>(true);
   const [ShowPasswordInfo, setShowPasswordInfo] = useState(false);
+  const router=useRouter();
 
   const submitActions = () => {
     if (!validator.isEmail(email)) {
@@ -33,13 +36,36 @@ const Signup = () => {
     } else {
       setShowPasswordInfo(false);
     }
-    if(password!==confirmPassword){
+    if (password !== confirmPassword) {
       Toast.show({
         type: "error",
         text1: "Not the same password",
       });
       return;
     }
+    signUpAPI(email, password).then((res) => {
+      console.log("resInpage: ", res);
+      if (res.success) {
+        Toast.show({
+          type: "success",
+          text1: "Account Created redirecting to Login",
+        });
+      } else if (res.status === 200) {
+        Toast.show({
+          type: "error",
+          text1: "Account exists redirecting to Login",
+        });
+      }
+      if(res.status===201 || res.status===200){
+        setTimeout(()=>{
+          router.push("/(tabs)/login");
+        },5000)
+      }
+      Toast.show({
+        type:"error",
+        text1:res.message,
+      });
+    });
   };
   return (
     <CardContainer>

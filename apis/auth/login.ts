@@ -10,22 +10,30 @@ export const loginAPI = async (
       email: email,
       password: password,
     });
-    return { success: true, message: "Login Successful", showPopUpMsg: true };
+    return {
+      status: 200,
+      success: true,
+      message: "Login Successful",
+      showPopUpMsg: true,
+    };
   } catch (error: any) {
     if (error.response) {
       return {
+        status:error.status,
         success: false,
         message: "Authentication failed",
         showPopUpMsg: false,
       };
     } else if (error.request) {
       return {
+        status:error.status,
         success: false,
         message: "No Response From Server, Check connection",
         showPopUpMsg: true,
       };
     } else {
       return {
+        status:error.status,
         success: false,
         message: "Unknown Error",
         showPopUpMsg: true,
