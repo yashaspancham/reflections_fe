@@ -58,7 +58,7 @@ const Signup = () => {
       }
       if(res.status===201 || res.status===200){
         setTimeout(()=>{
-          router.push("/(tabs)/login");
+          router.push("/login");
         },5000)
       }
       Toast.show({
