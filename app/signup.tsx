@@ -5,7 +5,7 @@ import { Text, TextInput, Button } from "react-native-paper";
 import CardContainer from "@/components/auth/CardContainer";
 import validator from "validator";
 import Toast from "react-native-toast-message";
-import { signUpAPI } from "@/apis/auth/signUp";
+import { signUpAPI } from "@/utiles/apis/auth/signUp";
 
 const Signup = () => {
   const [email, setEmail] = useState<string>("");

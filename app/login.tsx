@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { useTheme, Button, Text, TextInput } from "react-native-paper";
 import validator from "validator";
-import { loginAPI } from "@/apis/auth/login";
+import { loginAPI } from "@/utiles/apis/auth/login";
 import Toast from "react-native-toast-message";
 import CardContainer from "@/components/auth/CardContainer";
 
@@ -31,7 +31,7 @@ const LoginPage = () => {
       return;
     }
     loginAPI(email, password).then((res) => {
-      if (res.success) {
+      if (res.status===200) {
         setCredentialsNotOk(false);
         Toast.show({
           type: "success",
@@ -67,7 +67,6 @@ const LoginPage = () => {
               setEmail(text.nativeEvent.text);
             }}
           />
-
           <View>
             <TextInput
               style={{

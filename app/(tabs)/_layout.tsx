@@ -1,13 +1,24 @@
-import { Tabs } from "expo-router";
-import React from "react";
+import { router, Tabs } from "expo-router";
+import React, { useEffect } from "react";
 import { Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useSelector } from "react-redux";
+import { RootState } from "@/utiles/redux/store";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const isLoggedIn=useSelector((state:RootState)=>state.auth.isLoggedIn);
+  // useEffect(()=>{
+  //   let isMount=true;
+
+  //     if(!isLoggedIn){
+  //     router.replace("/login");
+  //   }
+    
+  // },[]);
   return (
     <Tabs
       screenOptions={{
