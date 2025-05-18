@@ -4,7 +4,7 @@ export const signUpAPI = async (
   email: string,
   password: string
 ): Promise<any> => {
-  const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}signup`;
+  const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/auth/signup`;
   try {
     const res = await axios.post(api, {
       email: email,

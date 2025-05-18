@@ -4,7 +4,7 @@ export const loginAPI = async (
   email: string,
   password: string
 ): Promise<any> => {
-  const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}login`;
+  const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/auth/login`;
   try {
     await axios.post(api, {
       email: email,
