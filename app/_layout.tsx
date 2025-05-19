@@ -14,7 +14,8 @@ import "react-native-reanimated";
 import { PaperProvider, MD3LightTheme } from "react-native-paper";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Provider } from "react-redux";
-import { store } from "@/utiles/redux/store";
+import { persistor, store } from "@/utiles/redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -41,14 +42,16 @@ export default function RootLayout() {
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
           <Provider store={store}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="signup" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </Provider>
+            <PersistGate loading={null} persistor={persistor}>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="login" options={{ headerShown: false }} />
+                <Stack.Screen name="signup" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </PersistGate>
+            <StatusBar style="auto" />
+          </Provider>
         </ThemeProvider>
       </GluestackUIProvider>
     </PaperProvider>
