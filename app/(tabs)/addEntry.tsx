@@ -37,8 +37,8 @@ const AddEntryPage = () => {
             const foundEntry = findEntryBasedOnDatetime(parsedDate, parsedEntries);
             if (foundEntry) {
               setEntry(foundEntry);
-              setTitleText(foundEntry.entryTitle);      // prefill title
-              setContentText(foundEntry.entryContent);  // prefill content
+              setTitleText(foundEntry.entryTitle);
+              setContentText(foundEntry.entryContent);
             }
           }
         });
@@ -55,7 +55,7 @@ const AddEntryPage = () => {
       Toast.show({
         type: "error",
         text1: "Please tell us More",
-        text2: "Your need to write both.",
+        text2: "You need to write both.",
       });
       return;
     }

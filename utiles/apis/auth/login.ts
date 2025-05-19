@@ -6,37 +6,38 @@ export const loginAPI = async (
 ): Promise<any> => {
   const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/auth/login`;
   try {
-    await axios.post(api, {
+    const result=await axios.post(api, {
       email: email,
       password: password,
     });
     return {
       status: 200,
-      success: true,
       message: "Login Successful",
       showPopUpMsg: true,
+      token:result.data.token,
+      userData:result.data.user,
     };
   } catch (error: any) {
     if (error.response) {
       return {
         status:error.status,
-        success: false,
         message: "Authentication failed",
         showPopUpMsg: false,
+        token:""
       };
     } else if (error.request) {
       return {
         status:error.status,
-        success: false,
         message: "No Response From Server, Check connection",
         showPopUpMsg: true,
+        token:""
       };
     } else {
       return {
         status:error.status,
-        success: false,
         message: "Unknown Error",
         showPopUpMsg: true,
+        token:""
       };
     }
   }
