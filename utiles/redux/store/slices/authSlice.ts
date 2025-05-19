@@ -1,29 +1,37 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type AuthState = {
   isLoggedIn: boolean;
   token: string | null;
+  user_id: number | null;
+  user_email: string | null;
 };
 
 const initialState: AuthState = {
   isLoggedIn: false,
   token: null,
+  user_id: null,
+  user_email: null,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
-    setLogin(state, action: PayloadAction<string>) {
+    setLogin(
+      state,
+      action: PayloadAction<{ token: string; user_id: number; user_email: string }>
+    ) {
       state.isLoggedIn = true;
-      state.token = action.payload;
-      AsyncStorage.setItem('project_y_token5321', action.payload);
+      state.token = action.payload.token;
+      state.user_id = action.payload.user_id;
+      state.user_email = action.payload.user_email;
     },
     setLogout(state) {
       state.isLoggedIn = false;
       state.token = null;
-      AsyncStorage.removeItem('project_y_token5321');
+      state.user_id = null;
+      state.user_email = null;
     },
     restoreSession(state, action: PayloadAction<string | null>) {
       state.isLoggedIn = !!action.payload;
