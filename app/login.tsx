@@ -40,8 +40,6 @@ const LoginPage = () => {
           type: "success",
           text1: res.message,
         });
-        console.log("res: ", res);
-        console.log("res.token: ", res.userData);
         dispatch(
           setLogin({
             token: res.token,

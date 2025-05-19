@@ -44,7 +44,6 @@ const Signup = () => {
       return;
     }
     signUpAPI(email, password).then((res) => {
-      console.log("resInpage: ", res);
       if (res.success) {
         Toast.show({
           type: "success",

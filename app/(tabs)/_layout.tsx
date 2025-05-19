@@ -14,7 +14,6 @@ export default function TabLayout() {
   const router=useRouter();
   useFocusEffect(
     useCallback(() => {
-      console.log("isLoggedIn: ",isLoggedIn);
       if (!isLoggedIn) {
         router.replace("/login");
       }

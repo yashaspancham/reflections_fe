@@ -10,8 +10,6 @@ export const loginAPI = async (
       email: email,
       password: password,
     });
-    console.log("result: ",result);
-    console.log("result: ",result.data.user);
     return {
       status: 200,
       message: "Login Successful",
