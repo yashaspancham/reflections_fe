@@ -6,6 +6,8 @@ import validator from "validator";
 import { loginAPI } from "@/utiles/apis/auth/login";
 import Toast from "react-native-toast-message";
 import CardContainer from "@/components/auth/CardContainer";
+import { useDispatch } from 'react-redux';
+import { setLogin } from '@/utiles/redux/store/slices/authSlice';
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
@@ -13,6 +15,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState<string>("");
   const [credentialsNotOk, setCredentialsNotOk] = useState<boolean>(false);
   const router = useRouter();
+  const dispatch=useDispatch();
   const theme = useTheme();
   const submitActions = () => {
     if (email === "" || password === "") {
@@ -37,7 +40,10 @@ const LoginPage = () => {
           type: "success",
           text1: res.message,
         });
-        router.push("/");
+        console.log("res: ",res);
+        console.log("res.token: ",res.token);
+        dispatch(setLogin(res.token));  
+        router.replace("/");
       } else {
         if (res.showPopUpMsg) {
           Toast.show({
