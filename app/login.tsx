@@ -17,7 +17,6 @@ const LoginPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const theme = useTheme();
-  console.log("process.env.EXPO_PUBLIC_TEST_STRING: ",process.env.EXPO_PUBLIC_TEST_STRING);
   const submitActions = () => {
     if (email === "" || password === "") {
       Toast.show({
