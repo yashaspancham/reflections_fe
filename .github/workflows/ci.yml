@@ -28,6 +28,7 @@ jobs:
         run: |
           echo "EXPO_PUBLIC_API_BASE_URL=${{ secrets.EXPO_PUBLIC_API_BASE_URL }} >> .env"
           echo "EXPO_PUBLIC_TEST_STRING=${{ secrets.EXPO_PUBLIC_TEST_STRING }} >> .env"
+          cat .env
       - name: Build Expo Web
         run: npx expo export --platform web
 
