@@ -27,14 +27,17 @@ const AddEntryPage = () => {
       const timeout = setTimeout(() => {
         titleTextInputRef.current?.focus();
       }, 100);
-  
+
       if (typeof datetime === "string") {
         const parsedDate = new Date(datetime);
         setDatetimePram(parsedDate);
         AsyncStorage.getItem("entries#1234").then((res) => {
           if (res !== null) {
             const parsedEntries: entryT[] = JSON.parse(res);
-            const foundEntry = findEntryBasedOnDatetime(parsedDate, parsedEntries);
+            const foundEntry = findEntryBasedOnDatetime(
+              parsedDate,
+              parsedEntries
+            );
             if (foundEntry) {
               setEntry(foundEntry);
               setTitleText(foundEntry.entryTitle);
@@ -45,7 +48,7 @@ const AddEntryPage = () => {
       } else {
         setDatetimePram(undefined);
       }
-  
+
       return () => clearTimeout(timeout);
     }, [datetime])
   );
@@ -80,7 +83,14 @@ const AddEntryPage = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 20, backgroundColor:"#f6f6f6",flex:1 }}>
+    <ScrollView
+      contentContainerStyle={{
+        padding: 20,
+        backgroundColor: "#f6f6f6",
+        flex: 1,
+        minHeight: 820,
+      }}
+    >
       <Toast />
       <View
         style={{
@@ -104,8 +114,8 @@ const AddEntryPage = () => {
             elevation: 2,
             padding: 10,
             marginTop: 20,
-            maxHeight:50,
-            justifyContent:"center",
+            maxHeight: 50,
+            justifyContent: "center",
           }}
         >
           <Text variant="bodySmall" style={{ color: theme.colors.secondary }}>
@@ -126,7 +136,7 @@ const AddEntryPage = () => {
           <TextInput
             ref={titleTextInputRef}
             placeholder={"Give your entry a title"}
-            value={entry===undefined?titleText:entry.entryTitle}
+            value={entry === undefined ? titleText : entry.entryTitle}
             onChangeText={(text) => setTitleText(text)}
             mode="outlined"
             multiline={false}
@@ -143,7 +153,7 @@ const AddEntryPage = () => {
           </Text>
           <TextInput
             placeholder={"Write your thoughts here..."}
-            value={entry === undefined ? contentText:entry.entryContent}
+            value={entry === undefined ? contentText : entry.entryContent}
             onChangeText={(text) => setContentText(text)}
             mode="outlined"
             multiline={true}
