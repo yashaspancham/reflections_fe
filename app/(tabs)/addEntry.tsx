@@ -4,10 +4,11 @@ import { formatFullDate } from "@/utiles/date";
 import { useRef, useState, useCallback } from "react";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
-import { saveToStorage } from "@/utiles/localStore";
 import Toast from "react-native-toast-message";
 import { entryT, oldEntryT } from "@/utiles/types";
-import { getEntryById } from "@/utiles/apis/entries/entries";
+import { addEntry, getEntryById } from "@/utiles/apis/entries/entries";
+import { useSelector } from "react-redux";
+import { RootState } from "@/utiles/redux/store";
 
 const AddEntryPage = () => {
   const theme = useTheme();
@@ -17,12 +18,12 @@ const AddEntryPage = () => {
   const titleTextInputRef = useRef<any | null>(null);
   const { entry_id } = useLocalSearchParams();
   const router = useRouter();
+  const user_id = useSelector((state: RootState) => state.auth.user_id);
 
   useFocusEffect(
     useCallback(() => {
       getEntryById(Number(entry_id)).then((res) => {
         if (res != null) {
-          console.log("res: ", res);
           setEntry(res);
         }
       });
@@ -38,22 +39,18 @@ const AddEntryPage = () => {
       });
       return;
     }
-    const entry: entryT = {
-      datetime: new Date(),
-      entryTitle: titleText,
-      entryContent: contentText,
-    };
-    saveToStorage(entry).then((res) => {
+    addEntry(user_id,titleText, contentText).then((res) => {
       if (res) {
-        setTitleText("");
-        setContentText("");
-        router.push("/success");
-      } else {
         Toast.show({
-          type: "error",
-          text1: "Unable to Save",
-          text2: "Unknown Error in Saving",
+          type: "success",
+          text1: "Entry Added",
         });
+      }
+      else{
+        Toast.show({
+          type:"error",
+          text1:"Unable to add Entry"
+        })
       }
     });
   };

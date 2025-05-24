@@ -7,11 +7,9 @@ export const allEntries = async (
   const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/user/${userId}`;
   try {
     const response = await axios.get(api);
-    console.log("response: ",response);
     const new_res: oldEntryT[] = await convertAllEntriesResposeToEntryType(
       response.data.entries
     );
-    console.log("new_res: ",new_res);
     return new_res;
   } catch (error: any) {
     console.log("error: ", error);
@@ -53,3 +51,19 @@ const convertAPIResponseTOldEntryT = (apiResEntry: any): oldEntryT => {
     entryContent: apiResEntry.content,
   };
 };
+
+export const addEntry=async(user_id:number|null,title:string,content:string):Promise<boolean>=>{
+  const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/add_entry/${user_id}`;
+  try{
+   const respose= await axios.post(api,{
+    title:title,
+    content:content
+    });
+    console.log("reponse: ",respose);
+    return true;
+  }
+  catch (error:any){
+    console.log("error: ",error);
+    return false;
+  }
+}
