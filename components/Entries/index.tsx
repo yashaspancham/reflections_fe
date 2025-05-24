@@ -4,29 +4,34 @@ import { dayAndMonth, getTimeWithAmPm } from "@/utiles/date";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 import { useState } from "react";
-import { entryT } from "@/utiles/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { oldEntryT } from "@/utiles/types";
 import { router } from "expo-router";
+import { allEntries } from "@/utiles/apis/entries/entries";
+import { useSelector } from 'react-redux';
+import { RootState } from "@/utiles/redux/store"; 
 
 const EntriesComponent = () => {
   const [dataPresent, setDataPresent] = useState<number>(0);
-  const [entries, setEntries] = useState<entryT[] | null>(null);
+  const [entries, setEntries] = useState<oldEntryT[] | null>(null);
   const theme = useTheme();
+  const user_id = useSelector((state: RootState) => state.auth.user_id);
   useFocusEffect(
     useCallback(() => {
       const loadData = async () => {
-        // await AsyncStorage.removeItem('entries#1234');
-        const entriesJSON = await AsyncStorage.getItem("entries#1234");
-        if (entriesJSON === null) {
-          setDataPresent(2);
-        } else {
-          const parsed = JSON.parse(entriesJSON);
-          setEntries(parsed);
-          setDataPresent(1);
+        let entries:oldEntryT[] | null;
+        if(user_id!=null){
+          entries = await allEntries(user_id);
+          if(entries?.length===0){
+            setDataPresent(2);
+          }
+          else{
+            setEntries(entries);
+            setDataPresent(1);
+          }
         }
       };
       loadData();
-    }, [])
+    }, [user_id ])
   );
   return (
     <ScrollView style={{ paddingHorizontal: 0 }}>
@@ -43,7 +48,7 @@ const EntriesComponent = () => {
           onPress={() =>
             router.push({
               pathname: "/addEntry",
-              params: { datetime: item.datetime.toString() },
+              params: { entry_id: item.entry_id},
             })
           }
         >

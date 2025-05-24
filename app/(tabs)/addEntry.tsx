@@ -3,51 +3,31 @@ import { useTheme, Text, TextInput, Button } from "react-native-paper";
 import { formatFullDate } from "@/utiles/date";
 import { useRef, useState, useCallback } from "react";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
-import { router } from "expo-router";
-import { saveToStorage } from "@/utiles/localStore";
+import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { entryT } from "@/utiles/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { findEntryBasedOnDatetime } from "@/utiles/others";
+import { entryT, oldEntryT } from "@/utiles/types";
+import { addEntry, getEntryById } from "@/utiles/apis/entries/entries";
+import { useSelector } from "react-redux";
+import { RootState } from "@/utiles/redux/store";
 
 const AddEntryPage = () => {
   const theme = useTheme();
   const [titleText, setTitleText] = useState<string>("");
   const [contentText, setContentText] = useState<string>("");
-  const [datetimePram, setDatetimePram] = useState<Date | undefined>(undefined);
-  const [entry, setEntry] = useState<entryT | undefined>(undefined);
+  const [entry, setEntry] = useState<oldEntryT | undefined>(undefined);
   const titleTextInputRef = useRef<any | null>(null);
-  const { datetime } = useLocalSearchParams();
+  const { entry_id } = useLocalSearchParams();
+  const router = useRouter();
+  const user_id = useSelector((state: RootState) => state.auth.user_id);
 
   useFocusEffect(
     useCallback(() => {
-      setContentText("");
-      setTitleText("");
-      setEntry(undefined);
-      const timeout = setTimeout(() => {
-        titleTextInputRef.current?.focus();
-      }, 100);
-  
-      if (typeof datetime === "string") {
-        const parsedDate = new Date(datetime);
-        setDatetimePram(parsedDate);
-        AsyncStorage.getItem("entries#1234").then((res) => {
-          if (res !== null) {
-            const parsedEntries: entryT[] = JSON.parse(res);
-            const foundEntry = findEntryBasedOnDatetime(parsedDate, parsedEntries);
-            if (foundEntry) {
-              setEntry(foundEntry);
-              setTitleText(foundEntry.entryTitle);
-              setContentText(foundEntry.entryContent);
-            }
-          }
-        });
-      } else {
-        setDatetimePram(undefined);
-      }
-  
-      return () => clearTimeout(timeout);
-    }, [datetime])
+      getEntryById(Number(entry_id)).then((res) => {
+        if (res != null) {
+          setEntry(res);
+        }
+      });
+    }, [entry_id])
   );
 
   const handleSaveButtonClick = async () => {
@@ -59,28 +39,31 @@ const AddEntryPage = () => {
       });
       return;
     }
-    const entry: entryT = {
-      datetime: new Date(),
-      entryTitle: titleText,
-      entryContent: contentText,
-    };
-    saveToStorage(entry).then((res) => {
+    addEntry(user_id,titleText, contentText).then((res) => {
       if (res) {
-        setTitleText("");
-        setContentText("");
-        router.push("/success");
-      } else {
         Toast.show({
-          type: "error",
-          text1: "Unable to Save",
-          text2: "Unknown Error in Saving",
+          type: "success",
+          text1: "Entry Added",
         });
+      }
+      else{
+        Toast.show({
+          type:"error",
+          text1:"Unable to add Entry"
+        })
       }
     });
   };
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 20, backgroundColor:"#f6f6f6",flex:1 }}>
+    <ScrollView
+      contentContainerStyle={{
+        padding: 20,
+        backgroundColor: "#f6f6f6",
+        flex: 1,
+        minHeight: 820,
+      }}
+    >
       <Toast />
       <View
         style={{
@@ -104,15 +87,13 @@ const AddEntryPage = () => {
             elevation: 2,
             padding: 10,
             marginTop: 20,
-            maxHeight:50,
-            justifyContent:"center",
+            maxHeight: 50,
+            justifyContent: "center",
           }}
         >
           <Text variant="bodySmall" style={{ color: theme.colors.secondary }}>
             Penned on{" "}
-            {formatFullDate(
-              datetimePram === undefined ? new Date() : datetimePram
-            )}
+            {formatFullDate(entry === undefined ? new Date() : entry.datetime)}
           </Text>
         </View>
 
@@ -126,7 +107,7 @@ const AddEntryPage = () => {
           <TextInput
             ref={titleTextInputRef}
             placeholder={"Give your entry a title"}
-            value={entry===undefined?titleText:entry.entryTitle}
+            value={entry === undefined ? titleText : entry.entryTitle}
             onChangeText={(text) => setTitleText(text)}
             mode="outlined"
             multiline={false}
@@ -143,7 +124,7 @@ const AddEntryPage = () => {
           </Text>
           <TextInput
             placeholder={"Write your thoughts here..."}
-            value={entry === undefined ? contentText:entry.entryContent}
+            value={entry === undefined ? contentText : entry.entryContent}
             onChangeText={(text) => setContentText(text)}
             mode="outlined"
             multiline={true}
