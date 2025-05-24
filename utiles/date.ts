@@ -40,3 +40,11 @@ export const getTimeWithAmPm = (date: Date): string => {
     hour12: true,
   });
 };
+
+export const convertPostgresDateTimeToJavascriptDateTime=(datatime:Date):Date=>{
+  console.log("io: ",datatime);
+  const temp=new Date(datatime);
+  console.log("op: ",temp);
+return new Date(datatime);
+}
+

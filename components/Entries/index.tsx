@@ -4,7 +4,7 @@ import { dayAndMonth, getTimeWithAmPm } from "@/utiles/date";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 import { useState } from "react";
-import { entryT } from "@/utiles/types";
+import { oldEntryT } from "@/utiles/types";
 import { router } from "expo-router";
 import { allEntries } from "@/utiles/apis/entries/entries";
 import { useSelector } from 'react-redux';
@@ -12,13 +12,13 @@ import { RootState } from "@/utiles/redux/store";
 
 const EntriesComponent = () => {
   const [dataPresent, setDataPresent] = useState<number>(0);
-  const [entries, setEntries] = useState<entryT[] | null>(null);
+  const [entries, setEntries] = useState<oldEntryT[] | null>(null);
   const theme = useTheme();
   const user_id = useSelector((state: RootState) => state.auth.user_id);
   useFocusEffect(
     useCallback(() => {
       const loadData = async () => {
-        let entries:entryT[] | null;
+        let entries:oldEntryT[] | null;
         if(user_id!=null){
           entries = await allEntries(user_id);
           if(entries?.length===0){
@@ -48,7 +48,7 @@ const EntriesComponent = () => {
           onPress={() =>
             router.push({
               pathname: "/addEntry",
-              params: { datetime: item.datetime.toString() },
+              params: { entry_id: item.entry_id},
             })
           }
         >
