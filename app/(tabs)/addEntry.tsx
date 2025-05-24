@@ -1,69 +1,28 @@
 import { ScrollView, View, Keyboard } from "react-native";
 import { useTheme, Text, TextInput, Button } from "react-native-paper";
-import {
-  convertPostgresDateTimeToJavascriptDateTime,
-  formatFullDate,
-} from "@/utiles/date";
+import { formatFullDate } from "@/utiles/date";
 import { useRef, useState, useCallback } from "react";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
 import { saveToStorage } from "@/utiles/localStore";
 import Toast from "react-native-toast-message";
 import { entryT, oldEntryT } from "@/utiles/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { findEntryBasedOnDatetime } from "@/utiles/others";
 import { getEntryById } from "@/utiles/apis/entries/entries";
 
 const AddEntryPage = () => {
   const theme = useTheme();
   const [titleText, setTitleText] = useState<string>("");
   const [contentText, setContentText] = useState<string>("");
-  const [datetimePram, setDatetimePram] = useState<Date | undefined>(undefined);
   const [entry, setEntry] = useState<oldEntryT | undefined>(undefined);
   const titleTextInputRef = useRef<any | null>(null);
-  const { datetime } = useLocalSearchParams();
   const { entry_id } = useLocalSearchParams();
   const router = useRouter();
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     setContentText("");
-  //     setTitleText("");
-  //     setEntry(undefined);
-  //     const timeout = setTimeout(() => {
-  //       titleTextInputRef.current?.focus();
-  //     }, 100);
-
-  //     if (typeof datetime === "string") {
-  //       const parsedDate = new Date(datetime);
-  //       setDatetimePram(parsedDate);
-  //       AsyncStorage.getItem("entries#1234").then((res) => {
-  //         if (res !== null) {
-  //           const parsedEntries: entryT[] = JSON.parse(res);
-  //           const foundEntry = findEntryBasedOnDatetime(
-  //             parsedDate,
-  //             parsedEntries
-  //           );
-  //           if (foundEntry) {
-  //             setEntry(foundEntry);
-  //             setTitleText(foundEntry.entryTitle);
-  //             setContentText(foundEntry.entryContent);
-  //           }
-  //         }
-  //       });
-  //     } else {
-  //       setDatetimePram(undefined);
-  //     }
-
-  //     return () => clearTimeout(timeout);
-  //   }, [datetime])
-  // );
 
   useFocusEffect(
     useCallback(() => {
       getEntryById(Number(entry_id)).then((res) => {
         if (res != null) {
-          console.log("res: ",res);
+          console.log("res: ", res);
           setEntry(res);
         }
       });
@@ -137,11 +96,7 @@ const AddEntryPage = () => {
         >
           <Text variant="bodySmall" style={{ color: theme.colors.secondary }}>
             Penned on{" "}
-            {formatFullDate(
-              entry === undefined
-                ? new Date()
-                : convertPostgresDateTimeToJavascriptDateTime(entry.created_at)
-            )}
+            {formatFullDate(entry === undefined ? new Date() : entry.datetime)}
           </Text>
         </View>
 
