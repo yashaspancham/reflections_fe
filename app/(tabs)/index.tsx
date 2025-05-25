@@ -30,7 +30,9 @@ export default function HomeScreen() {
       <FAB
         variant="primary"
         icon="plus"
-        onPress={() => router.push("/addEntry")}
+        onPress={() =>
+          router.push("/addEntry")
+        }
         style={{ position: "absolute", bottom: 30, right: 30 }}
       />
     </View>

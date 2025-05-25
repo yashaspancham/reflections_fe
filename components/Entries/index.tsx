@@ -31,7 +31,7 @@ const EntriesComponent = () => {
         }
       };
       loadData();
-    }, [user_id ])
+    }, [user_id])
   );
   return (
     <ScrollView style={{ paddingHorizontal: 0 }}>

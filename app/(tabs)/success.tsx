@@ -10,7 +10,7 @@ const SuccessPage = () => {
     
           const timeout = setTimeout(() => {
             router.push("/");
-          }, 500);
+          }, 700);
           return () => clearTimeout(timeout);
         }, [])
       );

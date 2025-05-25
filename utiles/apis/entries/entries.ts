@@ -3,7 +3,7 @@ import { oldEntryT } from "@/utiles/types";
 
 export const allEntries = async (
   userId: number
-): Promise<oldEntryT[] | null> => {
+): Promise<oldEntryT[] | any> => {
   const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/user/${userId}`;
   try {
     const response = await axios.get(api);
@@ -13,7 +13,22 @@ export const allEntries = async (
     return new_res;
   } catch (error: any) {
     console.log("error: ", error);
-    return null;
+    if (error.response) {
+      return {
+        status:error.status,
+        message: "Authentication failed",
+      };
+    } else if (error.request) {
+      return {
+        status:error.status,
+        message: "No Response From Server, Check connection",
+      };
+    } else {
+      return {
+        status:error.status,
+        message: "Unknown Error",
+      };
+    }
   }
 };
 
@@ -26,7 +41,6 @@ const convertAllEntriesResposeToEntryType = async (
     entryContent: item["content"],
     entryTitle: item["title"],
   }));
-  console.log("new_array: ", new_array);
   return new_array;
 };
 
@@ -55,11 +69,10 @@ const convertAPIResponseTOldEntryT = (apiResEntry: any): oldEntryT => {
 export const addEntry=async(user_id:number|null,title:string,content:string):Promise<boolean>=>{
   const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/add_entry/${user_id}`;
   try{
-   const respose= await axios.post(api,{
+   await axios.post(api,{
     title:title,
     content:content
     });
-    console.log("reponse: ",respose);
     return true;
   }
   catch (error:any){
