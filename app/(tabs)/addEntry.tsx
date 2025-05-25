@@ -1,7 +1,7 @@
 import { ScrollView, View, Keyboard } from "react-native";
 import { useTheme, Text, TextInput, Button } from "react-native-paper";
 import { formatFullDate } from "@/utiles/date";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
@@ -20,15 +20,19 @@ const AddEntryPage = () => {
   const router = useRouter();
   const user_id = useSelector((state: RootState) => state.auth.user_id);
 
-  useFocusEffect(
-    useCallback(() => {
-      getEntryById(Number(entry_id)).then((res) => {
-        if (res != null) {
-          setEntry(res);
-        }
-      });
-    }, [entry_id])
-  );
+  useEffect(() => {
+    if(!entry_id){
+      setEntry(undefined);
+      setTitleText("");
+      setContentText("");
+      return;
+    }
+    getEntryById(Number(entry_id)).then((res) => {
+      if (res != null) {
+        setEntry(res);
+      }
+    });
+  }, [entry_id]);
 
   const handleSaveButtonClick = async () => {
     if (titleText === "" || contentText === "") {
@@ -39,18 +43,17 @@ const AddEntryPage = () => {
       });
       return;
     }
-    addEntry(user_id,titleText, contentText).then((res) => {
+    addEntry(user_id, titleText, contentText).then((res) => {
       if (res) {
+        setEntry(undefined);
+        setTitleText("");
+        setContentText("");
+        router.push("/(tabs)/success");
+      } else {
         Toast.show({
-          type: "success",
-          text1: "Entry Added",
+          type: "error",
+          text1: "Unable to add Entry",
         });
-      }
-      else{
-        Toast.show({
-          type:"error",
-          text1:"Unable to add Entry"
-        })
       }
     });
   };
