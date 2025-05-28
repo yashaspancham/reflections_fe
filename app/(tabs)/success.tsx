@@ -7,7 +7,7 @@ const SuccessPage = () => {
     useCallback(() => {
       const timeout = setTimeout(() => {
         router.push("/");
-      }, 7000);
+      }, 2000);
       return () => clearTimeout(timeout);
     }, [])
   );
