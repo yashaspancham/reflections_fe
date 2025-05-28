@@ -14,6 +14,8 @@ const LoginPage = () => {
   const [hidePassword, sethidePassword] = useState<boolean>(true);
   const [password, setPassword] = useState<string>("");
   const [credentialsNotOk, setCredentialsNotOk] = useState<boolean>(false);
+  const [disableSubmitButton, setDisableSubmitButton] =
+    useState<boolean>(false);
   const router = useRouter();
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -23,6 +25,7 @@ const LoginPage = () => {
         type: "error",
         text1: "Enter both email and password",
       });
+      setDisableSubmitButton(false);
       return;
     }
 
@@ -31,6 +34,7 @@ const LoginPage = () => {
         type: "error",
         text1: "Enter valid email",
       });
+      setDisableSubmitButton(false);
       return;
     }
     loginAPI(email, password).then((res) => {
@@ -58,6 +62,7 @@ const LoginPage = () => {
           setCredentialsNotOk(true);
         }
       }
+      setDisableSubmitButton(false);
     });
   };
   return (
@@ -116,7 +121,8 @@ const LoginPage = () => {
       <Button
         mode="contained"
         style={{ minWidth: 300 }}
-        onPress={() => submitActions()}
+        onPress={() => {setDisableSubmitButton(true);submitActions()}}
+        disabled={disableSubmitButton}
       >
         Submit
       </Button>

@@ -13,7 +13,9 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [hidePassword, sethidePassword] = useState<boolean>(true);
   const [ShowPasswordInfo, setShowPasswordInfo] = useState(false);
-  const router=useRouter();
+  const [disableSubmitButton, setDisableSubmitButton] =
+    useState<boolean>(false);
+  const router = useRouter();
 
   const submitActions = () => {
     if (!validator.isEmail(email)) {
@@ -21,6 +23,7 @@ const Signup = () => {
         type: "error",
         text1: "Enter email in proper format",
       });
+      setDisableSubmitButton(false);
       return;
     }
     const isStrongPassword = validator.isStrongPassword(password, {
@@ -32,6 +35,7 @@ const Signup = () => {
     });
     if (!isStrongPassword) {
       setShowPasswordInfo(true);
+      setDisableSubmitButton(false);
       return;
     } else {
       setShowPasswordInfo(false);
@@ -41,6 +45,7 @@ const Signup = () => {
         type: "error",
         text1: "Not the same password",
       });
+      setShowPasswordInfo(false);
       return;
     }
     signUpAPI(email, password).then((res) => {
@@ -55,15 +60,16 @@ const Signup = () => {
           text1: "Account exists redirecting to Login",
         });
       }
-      if(res.status===201 || res.status===200){
-        setTimeout(()=>{
+      if (res.status === 201 || res.status === 200) {
+        setTimeout(() => {
           router.push("/login");
-        },5000)
+        }, 5000);
       }
       Toast.show({
-        type:"error",
-        text1:res.message,
+        type: "error",
+        text1: res.message,
       });
+      setShowPasswordInfo(false);
     });
   };
   return (
@@ -134,7 +140,11 @@ const Signup = () => {
       <Button
         mode="contained"
         style={{ minWidth: 300 }}
-        onPress={() => submitActions()}
+        onPress={() => {
+          setDisableSubmitButton(true);
+          submitActions();
+        }}
+        disabled={disableSubmitButton}
       >
         Submit
       </Button>

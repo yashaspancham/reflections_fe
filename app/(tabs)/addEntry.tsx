@@ -15,13 +15,14 @@ const AddEntryPage = () => {
   const [titleText, setTitleText] = useState<string>("");
   const [contentText, setContentText] = useState<string>("");
   const [entry, setEntry] = useState<oldEntryT | undefined>(undefined);
+  const [disableSaveButton, setDisableSaveButton] = useState<boolean>(false);
   const titleTextInputRef = useRef<any | null>(null);
   const { entry_id } = useLocalSearchParams();
   const router = useRouter();
   const user_id = useSelector((state: RootState) => state.auth.user_id);
 
   useEffect(() => {
-    if(!entry_id){
+    if (!entry_id) {
       setEntry(undefined);
       setTitleText("");
       setContentText("");
@@ -41,6 +42,7 @@ const AddEntryPage = () => {
         text1: "Please tell us More",
         text2: "You need to write both.",
       });
+      setDisableSaveButton(false);
       return;
     }
     addEntry(user_id, titleText, contentText).then((res) => {
@@ -55,6 +57,7 @@ const AddEntryPage = () => {
           text1: "Unable to add Entry",
         });
       }
+      setDisableSaveButton(false);
     });
   };
 
@@ -151,9 +154,10 @@ const AddEntryPage = () => {
           >
             <Button
               mode="contained"
-              onPress={() => handleSaveButtonClick()}
+              onPress={() => {setDisableSaveButton(true);handleSaveButtonClick()}}
               contentStyle={{ height: 50, width: 100 }}
               labelStyle={{ fontSize: 16 }}
+              disabled={disableSaveButton}
             >
               Save
             </Button>
