@@ -14,10 +14,13 @@ const LoginPage = () => {
   const [hidePassword, sethidePassword] = useState<boolean>(true);
   const [password, setPassword] = useState<string>("");
   const [credentialsNotOk, setCredentialsNotOk] = useState<boolean>(false);
+  const [disableSubmitButton, setDisableSubmitButton] =
+    useState<boolean>(false);
   const router = useRouter();
   const dispatch = useDispatch();
   const theme = useTheme();
   const submitActions = () => {
+    setDisableSubmitButton(true);
     if (email === "" || password === "") {
       Toast.show({
         type: "error",
@@ -58,6 +61,7 @@ const LoginPage = () => {
           setCredentialsNotOk(true);
         }
       }
+      setDisableSubmitButton(false);
     });
   };
   return (
@@ -117,6 +121,7 @@ const LoginPage = () => {
         mode="contained"
         style={{ minWidth: 300 }}
         onPress={() => submitActions()}
+        disabled={disableSubmitButton}
       >
         Submit
       </Button>
