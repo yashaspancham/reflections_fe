@@ -26,6 +26,7 @@ const LoginPage = () => {
         type: "error",
         text1: "Enter both email and password",
       });
+      setDisableSubmitButton(false);
       return;
     }
 
@@ -34,6 +35,7 @@ const LoginPage = () => {
         type: "error",
         text1: "Enter valid email",
       });
+      setDisableSubmitButton(false);
       return;
     }
     loginAPI(email, password).then((res) => {
