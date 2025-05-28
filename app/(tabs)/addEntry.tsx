@@ -36,7 +36,6 @@ const AddEntryPage = () => {
   }, [entry_id]);
 
   const handleSaveButtonClick = async () => {
-    setDisableSaveButton(true);
     if (titleText === "" || contentText === "") {
       Toast.show({
         type: "error",
@@ -155,7 +154,7 @@ const AddEntryPage = () => {
           >
             <Button
               mode="contained"
-              onPress={() => handleSaveButtonClick()}
+              onPress={() => {setDisableSaveButton(true);handleSaveButtonClick()}}
               contentStyle={{ height: 50, width: 100 }}
               labelStyle={{ fontSize: 16 }}
               disabled={disableSaveButton}

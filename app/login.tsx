@@ -20,7 +20,6 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const submitActions = () => {
-    setDisableSubmitButton(true);
     if (email === "" || password === "") {
       Toast.show({
         type: "error",
@@ -122,7 +121,7 @@ const LoginPage = () => {
       <Button
         mode="contained"
         style={{ minWidth: 300 }}
-        onPress={() => submitActions()}
+        onPress={() => {setDisableSubmitButton(true);submitActions()}}
         disabled={disableSubmitButton}
       >
         Submit
