@@ -1,5 +1,6 @@
 import axios from "axios";
-import { oldEntryT } from "@/utiles/types";
+import { apiReturnErrorT, oldEntryT } from "@/utiles/types";
+import { errorReturnFunction } from "../utils";
 
 export const allEntries = async (
   userId: number
@@ -12,26 +13,7 @@ export const allEntries = async (
     );
     return new_res;
   } catch (error: any) {
-    console.log("error: ", error);
-    if (error.response) {
-      return {
-        status:error.status,
-        message: "Authentication failed",
-        success:false
-      };
-    } else if (error.request) {
-      return {
-        status:error.status,
-        message: "No Response From Server, Check connection",
-        success:false
-      };
-    } else {
-      return {
-        status:error.status,
-        message: "Unknown Error",
-        success:false
-      };
-    }
+    return errorReturnFunction(error);
   }
 };
 
@@ -69,17 +51,20 @@ const convertAPIResponseTOldEntryT = (apiResEntry: any): oldEntryT => {
   };
 };
 
-export const addEntry=async(user_id:number|null,title:string,content:string):Promise<boolean>=>{
+export const addEntry = async (
+  user_id: number | null,
+  title: string,
+  content: string
+): Promise<boolean | apiReturnErrorT> => {
   const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/add_entry/${user_id}`;
-  try{
-   await axios.post(api,{
-    title:title,
-    content:content
+  try {
+    await axios.post(api, {
+      title: title,
+      content: content,
     });
     return true;
+  } catch (error: any) {
+    console.log("error: ", error);
+    return errorReturnFunction(error);
   }
-  catch (error:any){
-    console.log("error: ",error);
-    return false;
-  }
-}
+};
