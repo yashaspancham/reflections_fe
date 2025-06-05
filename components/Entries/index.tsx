@@ -7,8 +7,9 @@ import { useState } from "react";
 import { oldEntryT } from "@/utiles/types";
 import { router } from "expo-router";
 import { allEntries } from "@/utiles/apis/entries/entries";
-import { useSelector } from 'react-redux';
-import { RootState } from "@/utiles/redux/store"; 
+import { useSelector } from "react-redux";
+import { RootState } from "@/utiles/redux/store";
+import Toast from "react-native-toast-message";
 
 const EntriesComponent = () => {
   const [dataPresent, setDataPresent] = useState<number>(0);
@@ -18,16 +19,18 @@ const EntriesComponent = () => {
   useFocusEffect(
     useCallback(() => {
       const loadData = async () => {
-        let entries:oldEntryT[] | null;
-        if(user_id!=null){
-          entries = await allEntries(user_id);
-          if(entries?.length===0){
-            setDataPresent(2);
-          }
-          else{
-            setEntries(entries);
-            setDataPresent(1);
-          }
+        if (user_id != null) {
+          await allEntries(user_id).then((res) => {
+            if (res.message === null) {
+              setEntries(res);
+              setDataPresent(() => (res.length === 0 ? 2 : 1));
+            } else {
+              Toast.show({
+                type: "error",
+                text1: res.message,
+              });
+            }
+          });
         }
       };
       loadData();
@@ -48,7 +51,7 @@ const EntriesComponent = () => {
           onPress={() =>
             router.push({
               pathname: "/addEntry",
-              params: { entry_id: item.entry_id},
+              params: { entry_id: item.entry_id },
             })
           }
         >
@@ -119,7 +122,7 @@ const EntriesComponent = () => {
         <View
           style={{
             flex: 1,
-            alignItems:"center",
+            alignItems: "center",
           }}
         >
           <Text variant="headlineLarge" style={{ paddingTop: 100 }}>

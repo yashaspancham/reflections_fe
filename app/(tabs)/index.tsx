@@ -2,6 +2,7 @@ import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { useTheme, Text, FAB } from "react-native-paper";
 import EntriesComponent from "@/components/Entries";
+import Toast from "react-native-toast-message";
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -15,6 +16,7 @@ export default function HomeScreen() {
         backgroundColor: "#f6f6f6",
       }}
     >
+      <Toast />
       <Text
         variant="headlineLarge"
         style={{
@@ -30,9 +32,7 @@ export default function HomeScreen() {
       <FAB
         variant="primary"
         icon="plus"
-        onPress={() =>
-          router.push("/addEntry")
-        }
+        onPress={() => router.push("/addEntry")}
         style={{ position: "absolute", bottom: 30, right: 30 }}
       />
     </View>
