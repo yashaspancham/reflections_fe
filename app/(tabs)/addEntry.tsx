@@ -5,7 +5,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { entryT, oldEntryT } from "@/utiles/types";
+import { apiReturnErrorT, entryT, oldEntryT } from "@/utiles/types";
 import { addEntry, getEntryById } from "@/utiles/apis/entries/entries";
 import { useSelector } from "react-redux";
 import { RootState } from "@/utiles/redux/store";
@@ -29,7 +29,7 @@ const AddEntryPage = () => {
       return;
     }
     getEntryById(Number(entry_id)).then((res) => {
-      if (res != null) {
+      if (res!==null) {
         setEntry(res);
       }
     });
@@ -45,20 +45,22 @@ const AddEntryPage = () => {
       setDisableSaveButton(false);
       return;
     }
-    addEntry(user_id, titleText, contentText).then((res) => {
-      if (res) {
-        setEntry(undefined);
-        setTitleText("");
-        setContentText("");
-        router.push("/(tabs)/success");
-      } else {
-        Toast.show({
-          type: "error",
-          text1: "Unable to add Entry",
-        });
+    await addEntry(user_id, titleText, contentText).then(
+      (res: boolean | apiReturnErrorT) => {
+        if (res===true) {
+          setEntry(undefined);
+          setTitleText("");
+          setContentText("");
+          router.push("/(tabs)/success");
+        } else {
+          Toast.show({
+            type: "error",
+            text1: res.message,
+          });
+        }
+        setDisableSaveButton(false);
       }
-      setDisableSaveButton(false);
-    });
+    );
   };
 
   return (
@@ -154,7 +156,10 @@ const AddEntryPage = () => {
           >
             <Button
               mode="contained"
-              onPress={() => {setDisableSaveButton(true);handleSaveButtonClick()}}
+              onPress={() => {
+                setDisableSaveButton(true);
+                handleSaveButtonClick();
+              }}
               contentStyle={{ height: 50, width: 100 }}
               labelStyle={{ fontSize: 16 }}
               disabled={disableSaveButton}
