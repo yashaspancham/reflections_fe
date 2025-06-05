@@ -21,14 +21,15 @@ const EntriesComponent = () => {
       const loadData = async () => {
         if (user_id != null) {
           await allEntries(user_id).then((res) => {
-            if (res.message === null) {
-              setEntries(res);
-              setDataPresent(() => (res.length === 0 ? 2 : 1));
-            } else {
+            if (res.success === false) {
               Toast.show({
                 type: "error",
                 text1: res.message,
               });
+            } else {
+              console.log("res: ", res);
+              setEntries(res);
+              setDataPresent(() => (res.length === 0 ? 2 : 1));
             }
           });
         }
