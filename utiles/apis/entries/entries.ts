@@ -1,12 +1,13 @@
 import axios from "axios";
 import { oldEntryT } from "@/utiles/types";
+import api from "../interceptor";
 
 export const allEntries = async (
   userId: number
 ): Promise<oldEntryT[] | any> => {
-  const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/user/${userId}`;
+  const api_url: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/user/${userId}`;
   try {
-    const response = await axios.get(api);
+    const response = await api.get(api_url);
     const new_res: oldEntryT[] = await convertAllEntriesResposeToEntryType(
       response.data.entries
     );
@@ -50,9 +51,9 @@ const convertAllEntriesResposeToEntryType = async (
 export const getEntryById = async (
   entry_id: number
 ): Promise<oldEntryT | null> => {
-  const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/entry/${entry_id}`;
+  const api_url: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/entry/${entry_id}`;
   try {
-    const response = await axios.get(api);
+    const response = await api.get(api_url);
     return convertAPIResponseTOldEntryT(response.data.entry);
   } catch (error: any) {
     console.log("error: ", error);
@@ -70,9 +71,9 @@ const convertAPIResponseTOldEntryT = (apiResEntry: any): oldEntryT => {
 };
 
 export const addEntry=async(user_id:number|null,title:string,content:string):Promise<boolean>=>{
-  const api: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/add_entry/${user_id}`;
+  const api_url: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/add_entry/${user_id}`;
   try{
-   await axios.post(api,{
+   await api.post(api_url,{
     title:title,
     content:content
     });
