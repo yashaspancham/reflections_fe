@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Image, Pressable, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useTheme, Text, FAB } from "react-native-paper";
 import EntriesComponent from "@/components/Entries";
@@ -17,17 +17,31 @@ export default function HomeScreen() {
       }}
     >
       <Toast />
-      <Text
-        variant="headlineLarge"
+      <View
         style={{
-          color: theme.colors.primary,
+          borderBottomColor: theme.colors.secondary,
           borderBottomWidth: 2,
           paddingBottom: 10,
-          borderBottomColor: theme.colors.secondary,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
-        All Entries
-      </Text>
+        <Text
+          variant="headlineLarge"
+          style={{
+            color: theme.colors.primary,
+          }}
+        >
+          All Entries
+        </Text>
+        <Pressable onPress={()=>router.push("/(tabs)/profile")}>
+          <Image
+            source={require("../../assets/images/defaultProfilePic.png")}
+            style={{ width: 40, height: 40, marginRight: 10 }}
+          />
+        </Pressable>
+      </View>
       <EntriesComponent />
       <FAB
         variant="primary"
