@@ -3,6 +3,7 @@ import { View, Image, StyleSheet } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 import { RootState } from "@/utiles/redux/store";
 import { useSelector } from "react-redux";
+import { getUserData } from "@/utiles/apis/users/getUserData";
 
 const Profile = () => {
   const user_email = useSelector((state: RootState) => state.auth.user_email);
@@ -13,7 +14,9 @@ const Profile = () => {
     fontWeight: "bold" as const,
     fontSize: 16,
   };
-
+  useEffect(() => {
+    user_id!== null ? getUserData(user_id): {};
+  }, []);
   return (
     <View style={styles.container}>
       <Image
