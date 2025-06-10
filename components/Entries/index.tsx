@@ -27,7 +27,7 @@ const EntriesComponent = () => {
                 text1: res.message,
               });
             } else {
-              setEntries(res);
+              setEntries(()=>{return [...res].reverse()});
               setDataPresent(() => (res.length === 0 ? 2 : 1));
             }
           });
