@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { View, Image, StyleSheet } from "react-native";
 import { Text, useTheme, ActivityIndicator, Button } from "react-native-paper";
 import { RootState } from "@/utiles/redux/store";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setLogout } from "@/utiles/redux/store/slices/authSlice";
 import {
+  getCurrentStreak,
   getLongestStreak,
   getTotalEntries,
   getUserName,
@@ -20,6 +21,7 @@ const Profile = () => {
   const [longestStreak, setLongestStreak] = React.useState<number | null>(null);
   const [loadingLongestStreak, setLoadingLongestStreak] =
     React.useState<boolean>(true);
+  const [currentStreak, setCurrentStreak] = React.useState<number | null>(null);
   const [loadingCurrentStreak, setLoadingCurrentStreak] =
     React.useState<boolean>(true);
   const user_email = useSelector((state: RootState) => state.auth.user_email);
@@ -69,6 +71,18 @@ const Profile = () => {
           });
         }
       });
+      getCurrentStreak(user_id).then((res: any) => {
+        if (res.success) {
+          setCurrentStreak(res.data);
+          setLoadingCurrentStreak(false);
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: res.message || "Failed to fetch current streak.",
+          });
+        }
+      });
     }
   }, []);
 
@@ -104,10 +118,19 @@ const Profile = () => {
           )}
         </Text>
         <Text>
-          Current streak: <Text style={numberStyle}>34</Text>
+          Current streak:{" "}
+          {loadingCurrentStreak ? (
+            <ActivityIndicator />
+          ) : (
+            <Text style={numberStyle}>{currentStreak}</Text>
+          )}{" "}
         </Text>
       </View>
-      <Button mode="contained" onPress={() => dispatch(setLogout())}>
+      <Button
+        style={{ backgroundColor: theme.colors.error, marginTop: 20 }}
+        mode="contained"
+        onPress={() => dispatch(setLogout())}
+      >
         Logout
       </Button>
     </View>
