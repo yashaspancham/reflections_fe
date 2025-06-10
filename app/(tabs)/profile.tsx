@@ -9,6 +9,7 @@ import {
   getLongestStreak,
   getTotalEntries,
   getUserName,
+  putUserName,
 } from "@/utiles/apis/users/users";
 import Toast from "react-native-toast-message";
 
@@ -86,6 +87,18 @@ const Profile = () => {
     }
   }, []);
 
+  // putUserName(user_id, "kabu").then((res: any) => {
+  //   if (res.success) {
+  //     setUsername(res.data);
+  //   } else {
+  //     Toast.show({
+  //       type: "error",
+  //       text1: "Error",
+  //       text2: res.message || "Failed to update username.",
+  //     });
+  //   }
+  // });
+
   return (
     <View style={styles.container}>
       <Toast />
@@ -93,11 +106,13 @@ const Profile = () => {
         source={require("../../assets/images/defaultProfilePic.png")}
         style={styles.avatar}
       />
-      {loadingUsername ? (
-        <ActivityIndicator animating={true} />
-      ) : (
-        <Text style={styles.name}>{username}</Text>
-      )}
+      <View>
+        {loadingUsername ? (
+          <ActivityIndicator animating={true} />
+        ) : (
+          <Text style={styles.name}>{username}</Text>
+        )}
+      </View>
       <Text style={styles.email}>{user_email}</Text>
       <View>
         <Text variant="titleLarge">Some Stats</Text>
