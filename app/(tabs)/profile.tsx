@@ -4,8 +4,10 @@ import { Text, useTheme } from "react-native-paper";
 import { RootState } from "@/utiles/redux/store";
 import { useSelector } from "react-redux";
 import { getUserData } from "@/utiles/apis/users/getUserData";
+import Toast from "react-native-toast-message";
 
 const Profile = () => {
+  const[username, setUsername] = React.useState<string | null>(null);
   const user_email = useSelector((state: RootState) => state.auth.user_email);
   const user_id = useSelector((state: RootState) => state.auth.user_id);
   const theme = useTheme();
@@ -15,15 +17,27 @@ const Profile = () => {
     fontSize: 16,
   };
   useEffect(() => {
-    user_id!== null ? getUserData(user_id): {};
-  }, []);
+    if (user_id !== null && user_id !== undefined) {
+      getUserData(user_id).then((res:any)=>{
+        if(res.success) {
+       setUsername(res.data.username);
+        }
+        else{
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: res.message || "Failed to fetch user data.",
+          });
+        }
+    });
+}}, []);
   return (
     <View style={styles.container}>
       <Image
         source={require("../../assets/images/defaultProfilePic.png")}
         style={styles.avatar}
       />
-      <Text style={styles.name}>{user_email?.split("@")[0]}</Text>
+      <Text style={styles.name}>{username}</Text>
       <Text style={styles.email}>{user_email}</Text>
       <View>
         <Text variant="titleLarge">Some Stats</Text>
