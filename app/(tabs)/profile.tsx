@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { View, Image, StyleSheet } from "react-native";
-import { Text, useTheme, ActivityIndicator } from "react-native-paper";
+import { Text, useTheme, ActivityIndicator, Button } from "react-native-paper";
 import { RootState } from "@/utiles/redux/store";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { setLogout } from "@/utiles/redux/store/slices/authSlice";
 import {
   getLongestStreak,
   getTotalEntries,
@@ -24,6 +25,7 @@ const Profile = () => {
   const user_email = useSelector((state: RootState) => state.auth.user_email);
   const user_id = useSelector((state: RootState) => state.auth.user_id);
   const theme = useTheme();
+  const dispatch = useDispatch();
   const numberStyle = {
     color: theme.colors.primary,
     fontWeight: "bold" as const,
@@ -105,6 +107,9 @@ const Profile = () => {
           Current streak: <Text style={numberStyle}>34</Text>
         </Text>
       </View>
+      <Button mode="contained" onPress={() => dispatch(setLogout())}>
+        Logout
+      </Button>
     </View>
   );
 };
