@@ -1,13 +1,21 @@
 import React, { useEffect } from "react";
 import { View, Image, StyleSheet } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text, useTheme, ActivityIndicator } from "react-native-paper";
 import { RootState } from "@/utiles/redux/store";
 import { useSelector } from "react-redux";
-import { getUserData } from "@/utiles/apis/users/getUserData";
+import { getLongestStreak, getUserName } from "@/utiles/apis/users/users";
 import Toast from "react-native-toast-message";
 
 const Profile = () => {
-  const[username, setUsername] = React.useState<string | null>(null);
+  const [username, setUsername] = React.useState<string | null>(null);
+  const [loadingUsername, setLoadingUsername] = React.useState<boolean>(true);
+  const [loadingTotalEntries, setLoadingTotalEntries] =
+    React.useState<boolean>(true);
+  const [longestStreak, setLongestStreak] = React.useState<number | null>(null);
+  const [loadingLongestStreak, setLoadingLongestStreak] =
+    React.useState<boolean>(true);
+  const [loadingCurrentStreak, setLoadingCurrentStreak] =
+    React.useState<boolean>(true);
   const user_email = useSelector((state: RootState) => state.auth.user_email);
   const user_id = useSelector((state: RootState) => state.auth.user_id);
   const theme = useTheme();
@@ -18,26 +26,45 @@ const Profile = () => {
   };
   useEffect(() => {
     if (user_id !== null && user_id !== undefined) {
-      getUserData(user_id).then((res:any)=>{
-        if(res.success) {
-       setUsername(res.data.username);
-        }
-        else{
+      getUserName(user_id).then((res: any) => {
+        if (res.success) {
+          setUsername(res.data.username);
+          setLoadingUsername(false);
+        } else {
           Toast.show({
             type: "error",
             text1: "Error",
             text2: res.message || "Failed to fetch user data.",
           });
         }
-    });
-}}, []);
+      });
+      getLongestStreak(user_id).then((res: any) => {
+        if (res.success) {
+          setLongestStreak(res.data);
+          setLoadingLongestStreak(false);
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: res.message || "Failed to fetch longest streak.",
+          });
+        }
+      });
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
+      <Toast />
       <Image
         source={require("../../assets/images/defaultProfilePic.png")}
         style={styles.avatar}
       />
-      <Text style={styles.name}>{username}</Text>
+      {loadingUsername ? (
+        <ActivityIndicator animating={true} />
+      ) : (
+        <Text style={styles.name}>{username}</Text>
+      )}
       <Text style={styles.email}>{user_email}</Text>
       <View>
         <Text variant="titleLarge">Some Stats</Text>
@@ -45,7 +72,12 @@ const Profile = () => {
           Total entries: <Text style={numberStyle}>34</Text>
         </Text>
         <Text>
-          Longest streak: <Text style={numberStyle}>34</Text>
+          Longest streak:{" "}
+          {loadingLongestStreak ? (
+            <ActivityIndicator animating={true} />
+          ) : (
+            <Text style={numberStyle}>{longestStreak}</Text>
+          )}
         </Text>
         <Text>
           Current streak: <Text style={numberStyle}>34</Text>
