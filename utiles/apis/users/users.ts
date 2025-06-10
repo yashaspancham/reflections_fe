@@ -33,3 +33,18 @@ export const getLongestStreak = async (userId: number) => {
     return errorReturnFunction(error);
   }
 }
+
+export const getTotalEntries = async (userId: number) => {
+  const api_url = `${base_url}/users/getTotalEntries/user_id/${userId}`;
+  try {
+    const response = await api.get(api_url);
+    return {
+      message: response.data.message,
+      success: true,
+      data: response.data.totalEntries,
+    };
+  } catch (error) {
+    console.error("Error in getTotalEntries:", error);
+    return errorReturnFunction(error);
+  }
+}

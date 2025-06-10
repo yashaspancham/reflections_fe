@@ -3,12 +3,17 @@ import { View, Image, StyleSheet } from "react-native";
 import { Text, useTheme, ActivityIndicator } from "react-native-paper";
 import { RootState } from "@/utiles/redux/store";
 import { useSelector } from "react-redux";
-import { getLongestStreak, getUserName } from "@/utiles/apis/users/users";
+import {
+  getLongestStreak,
+  getTotalEntries,
+  getUserName,
+} from "@/utiles/apis/users/users";
 import Toast from "react-native-toast-message";
 
 const Profile = () => {
   const [username, setUsername] = React.useState<string | null>(null);
   const [loadingUsername, setLoadingUsername] = React.useState<boolean>(true);
+  const [totalEntries, setTotalEntries] = React.useState<number | null>(null);
   const [loadingTotalEntries, setLoadingTotalEntries] =
     React.useState<boolean>(true);
   const [longestStreak, setLongestStreak] = React.useState<number | null>(null);
@@ -50,6 +55,18 @@ const Profile = () => {
           });
         }
       });
+      getTotalEntries(user_id).then((res: any) => {
+        if (res.success) {
+          setTotalEntries(res.data);
+          setLoadingTotalEntries(false);
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: res.message || "Failed to fetch total entries.",
+          });
+        }
+      });
     }
   }, []);
 
@@ -69,7 +86,12 @@ const Profile = () => {
       <View>
         <Text variant="titleLarge">Some Stats</Text>
         <Text>
-          Total entries: <Text style={numberStyle}>34</Text>
+          Total entries:{" "}
+          {loadingTotalEntries ? (
+            <ActivityIndicator animating={true} />
+          ) : (
+            <Text style={numberStyle}>{totalEntries}</Text>
+          )}
         </Text>
         <Text>
           Longest streak:{" "}
