@@ -8,14 +8,11 @@ import {
   getCurrentStreak,
   getLongestStreak,
   getTotalEntries,
-  getUserName,
-  putUserName,
 } from "@/utiles/apis/users/users";
 import Toast from "react-native-toast-message";
+import ProfileInfo from "@/components/Profile_Info";
 
 const Profile = () => {
-  const [username, setUsername] = React.useState<string | null>(null);
-  const [loadingUsername, setLoadingUsername] = React.useState<boolean>(true);
   const [totalEntries, setTotalEntries] = React.useState<number | null>(null);
   const [loadingTotalEntries, setLoadingTotalEntries] =
     React.useState<boolean>(true);
@@ -25,7 +22,6 @@ const Profile = () => {
   const [currentStreak, setCurrentStreak] = React.useState<number | null>(null);
   const [loadingCurrentStreak, setLoadingCurrentStreak] =
     React.useState<boolean>(true);
-  const user_email = useSelector((state: RootState) => state.auth.user_email);
   const user_id = useSelector((state: RootState) => state.auth.user_id);
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -36,18 +32,6 @@ const Profile = () => {
   };
   useEffect(() => {
     if (user_id !== null && user_id !== undefined) {
-      getUserName(user_id).then((res: any) => {
-        if (res.success) {
-          setUsername(res.data.username);
-          setLoadingUsername(false);
-        } else {
-          Toast.show({
-            type: "error",
-            text1: "Error",
-            text2: res.message || "Failed to fetch user data.",
-          });
-        }
-      });
       getLongestStreak(user_id).then((res: any) => {
         if (res.success) {
           setLongestStreak(res.data);
@@ -87,33 +71,10 @@ const Profile = () => {
     }
   }, []);
 
-  // putUserName(user_id, "kabu").then((res: any) => {
-  //   if (res.success) {
-  //     setUsername(res.data);
-  //   } else {
-  //     Toast.show({
-  //       type: "error",
-  //       text1: "Error",
-  //       text2: res.message || "Failed to update username.",
-  //     });
-  //   }
-  // });
-
   return (
     <View style={styles.container}>
       <Toast />
-      <Image
-        source={require("../../assets/images/defaultProfilePic.png")}
-        style={styles.avatar}
-      />
-      <View>
-        {loadingUsername ? (
-          <ActivityIndicator animating={true} />
-        ) : (
-          <Text style={styles.name}>{username}</Text>
-        )}
-      </View>
-      <Text style={styles.email}>{user_email}</Text>
+      <ProfileInfo />
       <View>
         <Text variant="titleLarge">Some Stats</Text>
         <Text>
@@ -158,23 +119,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 80,
     backgroundColor: "#f6f6f6",
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 16,
-    backgroundColor: "#ddd",
-  },
-  name: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  email: {
-    fontSize: 16,
-    color: "#888",
-    marginBottom: 24,
   },
   button: {
     backgroundColor: "#007AFF",
