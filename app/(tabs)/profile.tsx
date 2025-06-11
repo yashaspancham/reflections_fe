@@ -28,7 +28,7 @@ const Profile = () => {
   const numberStyle = {
     color: theme.colors.primary,
     fontWeight: "bold" as const,
-    fontSize: 16,
+    fontSize: 30,
   };
   useEffect(() => {
     if (user_id !== null && user_id !== undefined) {
@@ -75,9 +75,9 @@ const Profile = () => {
     <View style={styles.container}>
       <Toast />
       <ProfileInfo />
-      <View>
-        <Text variant="titleLarge">Some Stats</Text>
-        <Text>
+      <View >
+        <Text variant="displaySmall">Some Stats</Text>
+        <Text variant="titleLarge">
           Total entries:{" "}
           {loadingTotalEntries ? (
             <ActivityIndicator animating={true} />
@@ -85,7 +85,7 @@ const Profile = () => {
             <Text style={numberStyle}>{totalEntries}</Text>
           )}
         </Text>
-        <Text>
+        <Text variant="titleLarge">
           Longest streak:{" "}
           {loadingLongestStreak ? (
             <ActivityIndicator animating={true} />
@@ -93,10 +93,10 @@ const Profile = () => {
             <Text style={numberStyle}>{longestStreak}</Text>
           )}
         </Text>
-        <Text>
+        <Text variant="titleLarge">
           Current streak:{" "}
           {loadingCurrentStreak ? (
-            <ActivityIndicator />
+            <ActivityIndicator animating={true}/>
           ) : (
             <Text style={numberStyle}>{currentStreak}</Text>
           )}{" "}
@@ -120,17 +120,8 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     backgroundColor: "#f6f6f6",
   },
-  button: {
-    backgroundColor: "#007AFF",
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
+  statTextsStyles:{
+  }
 });
 
 export default Profile;
