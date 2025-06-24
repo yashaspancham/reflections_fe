@@ -3,6 +3,7 @@ import {
   errorReturnFunction,
   convertAllEntriesResposeToEntryType,
   convertAPIResponseTOldEntryT,
+  cacheHit,
 } from "../utils";
 import api from "../interceptor";
 
@@ -45,6 +46,10 @@ export const getEntriesWithPagination = async (
 export const getEntryById = async (
   entry_id: number
 ): Promise<oldEntryT | null> => {
+  const entry: oldEntryT | null = await cacheHit(
+    "cache_entry_id_" + entry_id.toString()
+  );
+  if (entry !== null) return entry;
   const api_url: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/entry/${entry_id}`;
   try {
     const response = await api.get(api_url);

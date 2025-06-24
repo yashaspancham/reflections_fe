@@ -1,11 +1,11 @@
 import { ScrollView, View, Keyboard } from "react-native";
 import { useTheme, Text, TextInput, Button } from "react-native-paper";
 import { formatFullDate } from "@/utiles/date";
-import { useRef, useState, useCallback, useEffect } from "react";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useRef, useState, useEffect } from "react";
+import { useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { apiReturnErrorT, entryT, oldEntryT } from "@/utiles/types";
+import { apiReturnErrorT, oldEntryT } from "@/utiles/types";
 import { addEntry, getEntryById } from "@/utiles/apis/entries/entries";
 import { useSelector } from "react-redux";
 import { RootState } from "@/utiles/redux/store";
@@ -46,7 +46,7 @@ const AddEntryPage = () => {
       return;
     }
     await addEntry(user_id, titleText, contentText).then(
-      (res: boolean | apiReturnErrorT) => {
+      (res: boolean | apiReturnErrorT | any) => {
         if (res===true) {
           setEntry(undefined);
           setTitleText("");
