@@ -82,7 +82,7 @@ const EntriesComponent = () => {
           data={entries}
           renderItem={({ item, index }) => <Entry item={item} index={index} />}
           keyExtractor={(item) => item.entry_id.toString()}
-          onEndReached={() => handleEndOfPage()}
+          onEndReached={() => {hasMore?handleEndOfPage():{}}}
           onEndReachedThreshold={0.1}
           ListFooterComponent={
             loading ? <ActivityIndicator animating={true} /> : null

@@ -1,6 +1,9 @@
 import { apiReturnErrorT, oldEntryT } from "@/utiles/types";
-import { errorReturnFunction } from "../utils";
-// import { oldEntryT } from "@/utiles/types";
+import {
+  errorReturnFunction,
+  convertAllEntriesResposeToEntryType,
+  convertAPIResponseTOldEntryT,
+} from "../utils";
 import api from "../interceptor";
 
 const base_url = process.env.EXPO_PUBLIC_API_BASE_URL;
@@ -11,7 +14,7 @@ export const allEntries = async (
   const api_url: string = `${process.env.EXPO_PUBLIC_API_BASE_URL}/entries/user/${userId}`;
   try {
     const response = await api.get(api_url);
-    const new_res: oldEntryT[] =  convertAllEntriesResposeToEntryType(
+    const new_res: oldEntryT[] = convertAllEntriesResposeToEntryType(
       response.data.entries
     );
     return new_res;
@@ -29,26 +32,14 @@ export const getEntriesWithPagination = async (
     const api_url: string = `${base_url}/entries/user/user_id/${userId}/page_number/${pageNumber}`;
     const response = await api.get(api_url);
     return {
-      message:"entries fetched successfully",
+      message: "entries fetched successfully",
       success: true,
-      data:convertAllEntriesResposeToEntryType(response.data.entries),
-    }
+      data: convertAllEntriesResposeToEntryType(response.data.entries),
+    };
   } catch (error: any) {
     console.log("error: ", error);
     return errorReturnFunction(error);
   }
-};
-
-const convertAllEntriesResposeToEntryType =  (
-  allEntries: any[]
-): oldEntryT[] => {
-  const new_array = allEntries.map((item) => ({
-    entry_id: item["id"],
-    datetime: new Date(item["created_at"]),
-    entryContent: item["content"],
-    entryTitle: item["title"],
-  }));
-  return new_array;
 };
 
 export const getEntryById = async (
@@ -62,15 +53,6 @@ export const getEntryById = async (
     console.log("error: ", error);
     return null;
   }
-};
-
-const convertAPIResponseTOldEntryT = (apiResEntry: any): oldEntryT => {
-  return {
-    entry_id: apiResEntry.id,
-    datetime: new Date(apiResEntry.created_at),
-    entryTitle: apiResEntry.title,
-    entryContent: apiResEntry.content,
-  };
 };
 
 export const addEntry = async (
