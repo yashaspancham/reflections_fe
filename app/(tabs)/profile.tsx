@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { View, Image, StyleSheet } from "react-native";
+import React, { useEffect, useMemo } from "react";
+import { View, StyleSheet } from "react-native";
 import { Text, useTheme, ActivityIndicator, Button } from "react-native-paper";
 import { RootState } from "@/utiles/redux/store";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,11 +25,16 @@ const Profile = () => {
   const user_id = useSelector((state: RootState) => state.auth.user_id);
   const theme = useTheme();
   const dispatch = useDispatch();
-  const numberStyle = {
-    color: theme.colors.primary,
-    fontWeight: "bold" as const,
-    fontSize: 30,
-  };
+
+  const numberStyle = useMemo(
+    () => ({
+      color: theme.colors.primary,
+      fontWeight: "bold" as const,
+      fontSize: 30,
+    }),
+    [theme.colors.primary]
+  );
+
   useEffect(() => {
     if (user_id !== null && user_id !== undefined) {
       getLongestStreak(user_id).then((res: any) => {

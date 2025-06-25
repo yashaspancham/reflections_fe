@@ -1,11 +1,11 @@
 import { ScrollView, View, Keyboard } from "react-native";
 import { useTheme, Text, TextInput, Button } from "react-native-paper";
 import { formatFullDate } from "@/utiles/date";
-import { useRef, useState, useCallback, useEffect } from "react";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useRef, useState, useEffect, useMemo } from "react";
+import { useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { apiReturnErrorT, entryT, oldEntryT } from "@/utiles/types";
+import { apiReturnErrorT, oldEntryT } from "@/utiles/types";
 import { addEntry, getEntryById } from "@/utiles/apis/entries/entries";
 import { useSelector } from "react-redux";
 import { RootState } from "@/utiles/redux/store";
@@ -46,7 +46,7 @@ const AddEntryPage = () => {
       return;
     }
     await addEntry(user_id, titleText, contentText).then(
-      (res: boolean | apiReturnErrorT) => {
+      (res: boolean | apiReturnErrorT | any) => {
         if (res===true) {
           setEntry(undefined);
           setTitleText("");
@@ -63,42 +63,51 @@ const AddEntryPage = () => {
     );
   };
 
+  const scrollViewStyle = useMemo(
+    () => ({
+      padding: 20,
+      backgroundColor: "#f6f6f6",
+      flex: 1,
+      minHeight: 820,
+    }),
+    []
+  );
+
+  const outerViewStyle = useMemo(
+    () => ({
+      padding: 30,
+      flex: 1,
+      flexDirection: "column" as const,
+      gap: 40,
+      zIndex: -1,
+    }),
+    []
+  );
+
+  const dateViewStyle = useMemo(
+    () => ({
+      flex: 1,
+      borderRadius: 6,
+      alignItems: "center" as const,
+      backgroundColor: theme.colors.tertiaryContainer,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 2,
+      padding: 10,
+      marginTop: 20,
+      maxHeight: 50,
+      justifyContent: "center" as const,
+    }),
+    [theme.colors.tertiaryContainer]
+  );
+
   return (
-    <ScrollView
-      contentContainerStyle={{
-        padding: 20,
-        backgroundColor: "#f6f6f6",
-        flex: 1,
-        minHeight: 820,
-      }}
-    >
+    <ScrollView contentContainerStyle={scrollViewStyle}>
       <Toast />
-      <View
-        style={{
-          padding: 30,
-          flex: 1,
-          flexDirection: "column",
-          gap: 40,
-          zIndex: -1,
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            borderRadius: 6,
-            alignItems: "center",
-            backgroundColor: theme.colors.tertiaryContainer,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-            elevation: 2,
-            padding: 10,
-            marginTop: 20,
-            maxHeight: 50,
-            justifyContent: "center",
-          }}
-        >
+      <View style={outerViewStyle}>
+        <View style={dateViewStyle}>
           <Text variant="bodySmall" style={{ color: theme.colors.secondary }}>
             Penned on{" "}
             {formatFullDate(entry === undefined ? new Date() : entry.datetime)}

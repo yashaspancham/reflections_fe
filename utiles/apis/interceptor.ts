@@ -2,6 +2,7 @@ import axios from "axios";
 import { store } from "../redux/store";
 import { setLogout } from "../redux/store/slices/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { storeCache } from "./utils";
 
 const api = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_BASE_UR,
@@ -19,7 +20,10 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    storeCache(response);
+    return response;
+  },
   async (error) => {
     if (error.response?.status === 401) {
       store.dispatch(setLogout());
