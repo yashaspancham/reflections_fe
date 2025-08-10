@@ -1,8 +1,23 @@
-# Welcome to Reflections App 👋
+## reflections  (Frontend)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A simple diary web application frontend built with React. 
+Users can manage daily entries in a clean and responsive interface.
 
-## Get started
+
+## Features
+- Add new diary entries
+- View past entries
+- Responsive design for desktop and mobile
+
+
+## Tech Stack
+- React native with Expo
+- React Native Paper
+- Axios
+- Typescript
+- Redux
+
+
 
 1. Install dependencies
 
@@ -16,4 +31,5 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
     npx expo start
    ```
 
-This is the front-end for reflections project.
+
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
