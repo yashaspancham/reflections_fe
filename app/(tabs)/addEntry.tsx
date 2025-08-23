@@ -1,4 +1,10 @@
-import { ScrollView, View, Keyboard } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  StyleSheet,
+  StatusBar,
+} from "react-native";
 import { useTheme, Text, TextInput, Button } from "react-native-paper";
 import { formatFullDate } from "@/utiles/date";
 import { useRef, useState, useEffect, useMemo } from "react";
@@ -9,6 +15,7 @@ import { apiReturnErrorT, oldEntryT } from "@/utiles/types";
 import { addEntry, getEntryById } from "@/utiles/apis/entries/entries";
 import { useSelector } from "react-redux";
 import { RootState } from "@/utiles/redux/store";
+import React from "react";
 
 const AddEntryPage = () => {
   const theme = useTheme();
@@ -29,7 +36,7 @@ const AddEntryPage = () => {
       return;
     }
     getEntryById(Number(entry_id)).then((res) => {
-      if (res!==null) {
+      if (res !== null) {
         setEntry(res);
       }
     });
@@ -47,7 +54,7 @@ const AddEntryPage = () => {
     }
     await addEntry(user_id, titleText, contentText).then(
       (res: boolean | apiReturnErrorT | any) => {
-        if (res===true) {
+        if (res === true) {
           setEntry(undefined);
           setTitleText("");
           setContentText("");
@@ -150,7 +157,7 @@ const AddEntryPage = () => {
             onSubmitEditing={() => Keyboard.dismiss()}
             maxLength={1000}
             editable={entry === undefined ? true : false}
-          />
+          /> 
         </View>
 
         {entry === undefined && (

@@ -33,7 +33,7 @@ const EntriesComponent = () => {
                 text1: res.message,
               });
             } else {
-              setEntries(prev=>[...prev,...res.data]);
+              setEntries(prev => Array.from(new Map([...prev, ...res.data].map(item => [item.entry_id, item])).values()));
               setDataPresent(res.data.length === 0 ? 2 : 1);
               setPage((prevPage) => prevPage + 1);
             }
@@ -59,7 +59,7 @@ const EntriesComponent = () => {
             if (res.data.length === 0) {
               setHasMore(false);
             }
-            setEntries(prev=>[...prev,...res.data]);
+            setEntries(prev => [...prev, ...res.data]);
             setPage((prevPage) => prevPage + 1);
           }
         });
@@ -82,7 +82,7 @@ const EntriesComponent = () => {
           data={entries}
           renderItem={({ item, index }) => <Entry item={item} index={index} />}
           keyExtractor={(item) => item.entry_id.toString()}
-          onEndReached={() => {hasMore?handleEndOfPage():{}}}
+          onEndReached={() => { hasMore ? handleEndOfPage() : {} }}
           onEndReachedThreshold={0.1}
           ListFooterComponent={
             loading ? <ActivityIndicator animating={true} /> : null
