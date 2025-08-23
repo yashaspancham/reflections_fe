@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@expo/webpack-config": "^19.0.1",
     "@gluestack-ui/icon": "^0.1.27",
     "@gluestack-ui/nativewind-utils": "^1.0.26",
     "@gluestack-ui/overlay": "^0.1.22",
@@ -47,6 +48,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.9",
+    "react-native-cn-quill": "^0.7.20",
     "react-native-css-interop": "^0.1.22",
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "~2.20.2",
